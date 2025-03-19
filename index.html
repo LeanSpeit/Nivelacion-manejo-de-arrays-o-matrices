@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Personas</title>
+</head>
+<body>
+    <h1>Formulario de Registro de Personas</h1>
+
+    <div>
+        <label for="numPersonas">Número de personas a registrar: </label>
+        <input type="number" id="numPersonas" min="1" required>
+        <button onclick="registrarPersonas()">Registrar Personas</button>
+    </div>
+
+    <h2>Lista de Personas Registradas:</h2>
+    <div id="listaRegistrada"></div>
+
+    <h2>Lista Ordenada por Nota (de mayor a menor):</h2>
+    <div id="listaOrdenada"></div>
+
+    <script>
+        // Variable para almacenar la lista principal
+        let listaPersonas = [];
+
+        // Función que maneja la entrada de datos y el registro de personas
+        function registrarPersonas() {
+            // Obtenemos el número de personas a registrar
+            const numPersonas = document.getElementById('numPersonas').value;
+            
+            // Limpiamos las listas anteriores
+            listaPersonas = [];
+            document.getElementById('listaRegistrada').innerHTML = "";
+            document.getElementById('listaOrdenada').innerHTML = "";
+
+            // Validamos que el número de personas sea un número válido
+            if (numPersonas < 1) {
+                alert("Por favor ingresa un número válido de personas.");
+                return;
+            }
+
+            // Para cada persona, solicitamos los datos
+            for (let i = 0; i < numPersonas; i++) {
+                // Pedimos los datos de la persona
+                const nombre = prompt("Ingrese el nombre de la persona #" + (i + 1));
+                const edad = prompt("Ingrese la edad de " + nombre);
+                const nota = prompt("Ingrese la nota de " + nombre);
+
+                // Convertimos la edad y la nota a números
+                const edadNum = parseInt(edad);
+                const notaNum = parseFloat(nota);
+
+                // Verificamos si los datos son válidos
+                if (isNaN(edadNum) || isNaN(notaNum)) {
+                    alert("Por favor ingrese datos válidos para la edad y la nota.");
+                    i--; // Restamos 1 para repetir la iteración
+                    continue;
+                }
+
+                // Almacenamos los datos en un subarreglo y lo agregamos a la lista principal
+                listaPersonas.push([nombre, edadNum, notaNum]);
+            }
+
+            // Mostrar la lista de personas registradas
+            mostrarLista(listaPersonas, "listaRegistrada");
+
+            // Ordenar la lista por la nota de mayor a menor
+            listaPersonas.sort((a, b) => b[2] - a[2]);
+
+            // Mostrar la lista ordenada por nota
+            mostrarLista(listaPersonas, "listaOrdenada");
+        }
+
+        // Función para mostrar una lista en formato HTML
+        function mostrarLista(lista, idElemento) {
+            let listaHtml = "<ul>";
+            lista.forEach(persona => {
+                listaHtml += `<li>Nombre: ${persona[0]}, Edad: ${persona[1]}, Nota: ${persona[2]}</li>`;
+            });
+            listaHtml += "</ul>";
+
+            // Insertar el HTML generado en el div correspondiente
+            document.getElementById(idElemento).innerHTML = listaHtml;
+        }
+    </script>
+</body>
+</html>
